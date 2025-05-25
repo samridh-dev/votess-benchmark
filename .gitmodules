@@ -1,0 +1,9 @@
+[submodule "votess-cpu/extern/votess"]
+	path = votess-cpu/extern/votess
+	url = https://github.com/samridh-dev/votess.git
+[submodule "votess-gpu/extern/votess"]
+	path = votess-gpu/extern/votess
+	url = https://github.com/samridh-dev/votess.git
+[submodule "voropp/extern/voropp"]
+	path = voropp/extern/voropp
+	url = https://github.com/chr1shr/voro.git
