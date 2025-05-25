@@ -1,0 +1,66 @@
+cmake_minimum_required(VERSION 3.15)
+project(benchmark NONE)
+
+include(ExternalProject)
+
+set(BIN_DIR 
+        ${CMAKE_SOURCE_DIR}/bin
+        CACHE PATH "Output directory for all sub-project binaries"
+)
+
+ExternalProject_Add(benchmark_votess_cpu
+SOURCE_DIR ${CMAKE_SOURCE_DIR}/votess-cpu
+BINARY_DIR ${CMAKE_SOURCE_DIR}/votess-cpu/build
+CMAKE_ARGS
+-DCMAKE_CXX_COMPILER=${VOTESS_CPU_COMPILER}
+-DCMAKE_BUILD_TYPE=Release
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=${BIN_DIR}
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${BIN_DIR}
+-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${BIN_DIR}
+INSTALL_COMMAND ""
+)
+
+ExternalProject_Add(benchmark_votess_gpu
+SOURCE_DIR ${CMAKE_SOURCE_DIR}/votess-gpu
+BINARY_DIR ${CMAKE_SOURCE_DIR}/votess-gpu/build
+CMAKE_ARGS
+-DCMAKE_CXX_COMPILER=${VOTESS_GPU_COMPILER}
+-DCMAKE_BUILD_TYPE=Release
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=${BIN_DIR}
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${BIN_DIR}
+-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${BIN_DIR}
+INSTALL_COMMAND ""
+)
+
+ExternalProject_Add(benchmark_voropp
+SOURCE_DIR ${CMAKE_SOURCE_DIR}/voropp
+BINARY_DIR ${CMAKE_SOURCE_DIR}/voropp/build
+CMAKE_ARGS
+-DCMAKE_CXX_COMPILER=${VOROPP_COMPILER}
+-DCMAKE_BUILD_TYPE=Release
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=${BIN_DIR}
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${BIN_DIR}
+-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${BIN_DIR}
+INSTALL_COMMAND ""
+)
+
+ExternalProject_Add(benchmark_cgal
+SOURCE_DIR ${CMAKE_SOURCE_DIR}/cgal
+BINARY_DIR ${CMAKE_SOURCE_DIR}/cgal/build
+CMAKE_ARGS
+-DCMAKE_CXX_COMPILER=${CGAL_COMPILER}
+-DCMAKE_BUILD_TYPE=Release
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=${BIN_DIR}
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${BIN_DIR}
+-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${BIN_DIR}
+INSTALL_COMMAND ""
+)
+
+
+add_custom_target(build_all
+        DEPENDS 
+                benchmark_votess_cpu
+                benchmark_votess_gpu
+                benchmark_voropp
+                benchmark_cgal
+)
