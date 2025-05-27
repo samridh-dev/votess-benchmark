@@ -48,6 +48,22 @@ main(void)
 
                 std::vector<std::array<Tf, 3>> vec(n);
 
+                {
+                        for (auto& v : vec) {
+                                generate_uniform_dataset(v.begin(), v.size());
+                        }
+
+                        std::vector<std::pair<Point,unsigned>> pts;
+                        pts.reserve(n);
+                        for(unsigned i=0; i<n; ++i){
+                                const auto& a = vec[i];
+                                pts.emplace_back(Point(a[0], a[1], a[2]), i);
+                        }
+
+                        Delaunay dt(pts.begin(), pts.end());
+
+                }
+
                 for (I iter_i{0}; iter_i < imax; ++iter_i) {
 
                         std::cout << "[iter]: " << iter_i << std::endl;
