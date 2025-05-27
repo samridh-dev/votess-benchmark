@@ -6,7 +6,8 @@ To initialize the repository after a fresh commit, run:
 init.sh
 ```
 
-After doing so, compile with 
+After doing so, review the `Makefile` to verify that each sub program will be
+compiled with the correct compiler. After doing so, run the following command:
 
 ```bash
 make clean && make && make
