@@ -56,6 +56,19 @@ CMAKE_ARGS
 INSTALL_COMMAND ""
 )
 
+ExternalProject_Add(benchmark_qhull
+SOURCE_DIR ${CMAKE_SOURCE_DIR}/qhull
+BINARY_DIR ${CMAKE_SOURCE_DIR}/qhull/build
+CMAKE_ARGS
+-DCMAKE_CXX_COMPILER=${QHULL_COMPILER}
+-DCMAKE_BUILD_TYPE=Release
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=${BIN_DIR}
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${BIN_DIR}
+-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=${BIN_DIR}
+-DCMAKE_POLICY_VERSION_MINIMUM=3.5
+INSTALL_COMMAND ""
+)
+
 
 add_custom_target(build_all
         DEPENDS 
@@ -63,4 +76,5 @@ add_custom_target(build_all
                 benchmark_votess_gpu
                 benchmark_voropp
                 benchmark_cgal
+                benchmark_qhull
 )
