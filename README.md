@@ -20,5 +20,5 @@ And to run the benchmarks, use the command:
 run.sh
 ```
 
-To configure parameters for the benchmark, all varialbes are configured in
+To configure parameters for the benchmark, all variables are configured in
 compile time in `include/params.hpp`.
