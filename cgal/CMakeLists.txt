@@ -10,6 +10,7 @@ message(STATUS "compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "c++ standard: c++${CMAKE_CXX_STANDARD}")
 
 find_package(CGAL REQUIRED)
+find_package(TBB  REQUIRED)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w -O3")
 
@@ -20,6 +21,8 @@ else()
       add_compile_options(-fopenmp)
       add_link_options(-fopenmp)
 endif()
+
+add_compile_definitions(CGAL_LINKED_WITH_TBB)
 
 include_directories(../include)
 
@@ -32,4 +35,6 @@ add_executable(benchmark_cgal ${CXX_SRC})
 
 target_link_libraries(benchmark_cgal PRIVATE
         CGAL::CGAL
+        TBB::tbb
+        TBB::tbbmalloc
 )

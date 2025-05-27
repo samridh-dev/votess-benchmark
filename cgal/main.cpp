@@ -1,8 +1,11 @@
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/Delaunay_triangulation_3.h>
-#include <CGAL/Delaunay_triangulation_cell_base_3.h>
 #include <CGAL/Triangulation_vertex_base_with_info_3.h>
+#include <CGAL/Delaunay_triangulation_cell_base_3.h>
+#include <CGAL/Triangulation_data_structure_3.h>
+#include <CGAL/Delaunay_triangulation_3.h>
+#include <CGAL/Bbox_3.h>
 
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 
@@ -16,7 +19,12 @@ using nlohmann::json;
 typedef CGAL::Exact_predicates_inexact_constructions_kernel     K;
 typedef CGAL::Triangulation_vertex_base_with_info_3<unsigned,K> Vb;
 typedef CGAL::Delaunay_triangulation_cell_base_3<K>             Cb;
-typedef CGAL::Triangulation_data_structure_3<Vb,Cb>             Tds;
+
+#ifdef CGAL_LINKED_WITH_TBB
+typedef CGAL::Triangulation_data_structure_3<Vb, Cb, CGAL::Parallel_tag> Tds;
+#else
+typedef CGAL::Triangulation_data_structure_3<Vb,Cb>                      Tds;
+#endif
 typedef CGAL::Delaunay_triangulation_3<K,Tds>                   Delaunay;
 typedef Delaunay::Point                                         Point;
 
@@ -42,6 +50,12 @@ main(void)
         j_data["metadata"]["k"]  =  k;
         j_data["metadata"]["gr"] = gr;
 
+
+        #ifndef CGAL_LINKED_WITH_TBB
+        #warning "CGAL NOT PARALLELIZED"
+        std::cout << "WARNING: CGAL NOT PARALLELIZED" << std::endl;
+        #endif
+
         for (auto n : N) {
 
                 std::cout << "[N]" << n << std::endl;
@@ -60,7 +74,30 @@ main(void)
                                 pts.emplace_back(Point(a[0], a[1], a[2]), i);
                         }
 
+                        #ifdef CGAL_LINKED_WITH_TBB
+
+                        double minx=+1e300; 
+                        double miny=+1e300;
+                        double minz=+1e300;
+                        double maxx=-1e300;
+                        double maxy=-1e300;
+                        double maxz=-1e300;
+
+                        for(auto& p : pts){
+                                const auto& P = p.first;
+                                minx = std::min(minx, P.x());
+                                maxx = std::max(maxx, P.x());
+                                miny = std::min(miny, P.y());
+                                maxy = std::max(maxy, P.y());
+                                minz = std::min(minz, P.z());
+                                maxz = std::max(maxz, P.z());
+                        }
+                        CGAL::Bbox_3 bbox(minx, miny, minz, maxx, maxy, maxz);
+                        Delaunay::Lock_data_structure lock_ds(bbox, 50);
+                        Delaunay dt(pts.begin(), pts.end(), &lock_ds);
+                        #else
                         Delaunay dt(pts.begin(), pts.end());
+                        #endif
 
                 }
 
