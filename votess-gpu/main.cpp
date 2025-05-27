@@ -33,6 +33,19 @@ main(void)
                 std::cout << "[N]" << n << std::endl;
 
                 std::vector<std::array<Tf, 3>> vec(n);
+                
+                // to remove first run
+                {
+                        for (auto& v : vec) {
+                                generate_uniform_dataset(v.begin(), v.size());
+                        }
+                        votess::vtargs vtargs;
+                        vtargs["k"] = k;
+                        vtargs["knn_grid_resolution"] = gr;
+                        auto dnn = votess::tesellate<Ti, Tf>(
+                                vec, vtargs, votess::device::gpu
+                        );
+                }
 
                 for (I iter_i{0}; iter_i < imax; ++iter_i) {
 
