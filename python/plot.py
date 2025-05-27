@@ -16,20 +16,22 @@ ext     = "png"
 cpu_info = "13th Gen Intel i5-1335U (12) @ 4.600GHz"
 gpu_info = "Intel Raptor Lake-P [Iris Xe Graphics] "
 
-algorithms = ['votess (CPU)', 'votess (GPU)', 'voro++', 'CGAL']
+algorithms = ['votess (CPU)', 'votess (GPU)', 'voro++', 'CGAL', 'qhull']
 
 stub_map   = {
     algorithms[0] : 'votess-cpu',
     algorithms[1] : 'votess-gpu',
     algorithms[2] : 'voropp',
-    algorithms[3] : 'cgal'
+    algorithms[3] : 'cgal',
+    algorithms[4] : 'qhull',
 }
 
 colors = {
     algorithms[0] : '#BB5566',
     algorithms[1] : '#004488',
     algorithms[2] : '#DDAA33',
-    algorithms[3] : '#000000'
+    algorithms[3] : '#000000',
+    algorithms[4] : '#AAAAAA',
 }
 
 data = {}
