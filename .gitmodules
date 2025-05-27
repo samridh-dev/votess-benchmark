@@ -7,3 +7,6 @@
 [submodule "voropp/extern/voropp"]
 	path = voropp/extern/voropp
 	url = https://github.com/chr1shr/voro.git
+[submodule "qhull/extern/qhull"]
+	path = qhull/extern/qhull
+	url = https://github.com/qhull/qhull.git
