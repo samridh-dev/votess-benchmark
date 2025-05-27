@@ -24,6 +24,7 @@ build:
 	cmake --build $(BUILD_DIR) --target build_all
 
 clean:
+	rm -rf bin/*
 	rm -rf $(BUILD_DIR)
 	rm -rf votess-cpu/build
 	rm -rf votess-gpu/build
