@@ -10,7 +10,7 @@ After doing so, review the `Makefile` to verify that each sub program will be
 compiled with the correct compiler. After doing so, run the following command:
 
 ```bash
-make clean && make && make
+make clean && make; make
 ```
 
 For some reason you have to make twice (I haven't bothered to figure out why).
