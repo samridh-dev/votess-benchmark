@@ -26,6 +26,8 @@ endif()
 
 add_executable(benchmark_votess_gpu ${CXX_SRC})
 
+find_package(Threads REQUIRED)
 target_link_libraries(benchmark_votess_gpu PRIVATE
         votess
+        Threads::Threads
 )
