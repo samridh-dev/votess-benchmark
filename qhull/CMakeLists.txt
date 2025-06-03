@@ -29,3 +29,7 @@ add_executable(benchmark_qhull ${CXX_SRC})
 target_link_libraries(benchmark_qhull PRIVATE
         qhullstatic_r qhullcpp
 )
+
+target_include_directories(benchmark_qhull PRIVATE
+    ${CMAKE_SOURCE_DIR}/extern/qhull/src
+)
