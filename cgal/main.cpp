@@ -130,8 +130,10 @@ main(void)
                         std::vector<std::vector<unsigned>> neighbors(n);
 
                         auto time_cgal = measure_execution_time([&]{
+
                                 Delaunay dt(pts.begin(), pts.end());
 
+#if 0
                                 for(auto vit = dt.finite_vertices_begin(); 
                                          vit != dt.finite_vertices_end();
                                          ++vit) {
@@ -152,6 +154,7 @@ main(void)
                                         }
 
                                 }
+#endif
 
                         });
 
