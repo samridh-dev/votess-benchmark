@@ -10,6 +10,46 @@ using nlohmann::json;
 int
 main(void)
 {
+        {
+
+        sycl::queue q;
+
+        sycl::device device = q.get_device();
+        std::cout << "Queue Information:\n";
+        std::cout << " Device Name: "
+                  << device.get_info<sycl::info::device::name>()
+                  << "\n";
+        std::cout << " Vendor: "
+                  << device.get_info<sycl::info::device::vendor>()
+                  << "\n";
+        std::cout << " Device Type: ";
+        switch (device.get_info<sycl::info::device::device_type>()) {
+                case sycl::info::device_type::cpu:
+                        std::cout << "CPU"; break;
+                case sycl::info::device_type::gpu:
+                        std::cout << "GPU"; break;
+                case sycl::info::device_type::accelerator:
+                        std::cout << "Accelerator"; break;
+                default:
+                        std::cout << "Unknown";
+        }
+        std::cout << "\n";
+        std::cout << "  Max Compute Units: "
+                  << device.get_info<sycl::info::device::max_compute_units>()
+                  << "\n";
+        std::cout << "  Global Memory: "
+                  << device.get_info<sycl::info::device::global_mem_size>()
+                    / (1024 * 1024)
+                  << " MB\n";
+        std::cout << "  Local Memory: "
+                  << device.get_info<sycl::info::device::local_mem_size>()
+                    / 1024
+                  << " KB\n";
+        std::cout << "        Max Work Group Size: "
+                  << device.get_info<sycl::info::device::max_work_group_size>()
+                  << "\n";
+
+        }
 
         std::vector<I> N;
 
