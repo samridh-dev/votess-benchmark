@@ -76,8 +76,6 @@ main(void)
 
                         #ifdef CGAL_LINKED_WITH_TBB
 
-                        tbb::task_scheduler_init tsi(12);
-
                         double minx=+1e300; 
                         double miny=+1e300;
                         double minz=+1e300;
