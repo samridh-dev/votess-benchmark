@@ -52,7 +52,7 @@ main(void)
 
 
         #ifndef CGAL_LINKED_WITH_TBB
-        #warning "CGAL NOT PARALLELIZED"
+        #error "CGAL NOT PARALLELIZED"
         std::cout << "WARNING: CGAL NOT PARALLELIZED" << std::endl;
         #endif
 
@@ -76,6 +76,8 @@ main(void)
 
                         #ifdef CGAL_LINKED_WITH_TBB
 
+                        tbb::task_scheduler_init tsi(12);
+
                         double minx=+1e300; 
                         double miny=+1e300;
                         double minz=+1e300;
@@ -92,11 +94,15 @@ main(void)
                                 minz = std::min(minz, P.z());
                                 maxz = std::max(maxz, P.z());
                         }
+                        
                         CGAL::Bbox_3 bbox(minx, miny, minz, maxx, maxy, maxz);
                         Delaunay::Lock_data_structure lock_ds(bbox, 50);
                         Delaunay dt(pts.begin(), pts.end(), &lock_ds);
+
                         #else
+
                         Delaunay dt(pts.begin(), pts.end());
+
                         #endif
 
                 }
