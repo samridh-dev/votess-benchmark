@@ -37,7 +37,11 @@ main(void)
 
         tbb::global_control gc(
                 tbb::global_control::max_allowed_parallelism,
+#if 1
                 std::thread::hardware_concurrency()
+#else
+                1
+#endif
         );
 
         std::vector<I> N;
@@ -69,48 +73,40 @@ main(void)
 
                 std::vector<std::array<Tf, 3>> vec(n);
 
-                {
-                        for (auto& v : vec) {
-                                generate_uniform_dataset(v.begin(), v.size());
-                        }
-
-                        std::vector<std::pair<Point,unsigned>> pts;
-                        pts.reserve(n);
-                        for(unsigned i=0; i<n; ++i){
-                                const auto& a = vec[i];
-                                pts.emplace_back(Point(a[0], a[1], a[2]), i);
-                        }
-
-                        #ifdef CGAL_LINKED_WITH_TBB
-
-                        double minx=+1e300; 
-                        double miny=+1e300;
-                        double minz=+1e300;
-                        double maxx=-1e300;
-                        double maxy=-1e300;
-                        double maxz=-1e300;
-
-                        for(auto& p : pts){
-                                const auto& P = p.first;
-                                minx = std::min(minx, P.x());
-                                maxx = std::max(maxx, P.x());
-                                miny = std::min(miny, P.y());
-                                maxy = std::max(maxy, P.y());
-                                minz = std::min(minz, P.z());
-                                maxz = std::max(maxz, P.z());
-                        }
-                        
-                        CGAL::Bbox_3 bbox(minx, miny, minz, maxx, maxy, maxz);
-                        Delaunay::Lock_data_structure lock_ds(bbox, 50);
-                        Delaunay dt(pts.begin(), pts.end(), &lock_ds);
-
-                        #else
-
-                        Delaunay dt(pts.begin(), pts.end());
-
-                        #endif
-
+                for (auto& v : vec) {
+                        generate_uniform_dataset(v.begin(), v.size());
                 }
+
+                std::vector<std::pair<Point,unsigned>> pts;
+                pts.reserve(n);
+                for(unsigned i=0; i<n; ++i){
+                        const auto& a = vec[i];
+                        pts.emplace_back(Point(a[0], a[1], a[2]), i);
+                }
+
+                #ifdef CGAL_LINKED_WITH_TBB
+
+                double minx=+1e300; 
+                double miny=+1e300;
+                double minz=+1e300;
+                double maxx=-1e300;
+                double maxy=-1e300;
+                double maxz=-1e300;
+
+                for(auto& p : pts){
+                        const auto& P = p.first;
+                        minx = std::min(minx, P.x());
+                        maxx = std::max(maxx, P.x());
+                        miny = std::min(miny, P.y());
+                        maxy = std::max(maxy, P.y());
+                        minz = std::min(minz, P.z());
+                        maxz = std::max(maxz, P.z());
+                }
+                
+                CGAL::Bbox_3 bbox(minx, miny, minz, maxx, maxy, maxz);
+                Delaunay::Lock_data_structure lock_ds(bbox, 50);
+
+                #endif
 
                 for (I iter_i{0}; iter_i < imax; ++iter_i) {
 
@@ -131,7 +127,15 @@ main(void)
 
                         auto time_cgal = measure_execution_time([&]{
 
+                                #ifdef CGAL_LINKED_WITH_TBB
+
+                                Delaunay dt(pts.begin(), pts.end(), &lock_ds);
+
+                                #else
+
                                 Delaunay dt(pts.begin(), pts.end());
+
+                                #endif
 
 #if 0
                                 for(auto vit = dt.finite_vertices_begin(); 
