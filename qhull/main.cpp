@@ -17,16 +17,13 @@ int
 main(void)
 {
 
-        std::vector<I> N;
-
-        I num_points = (N1 - N0) / dN + 1;
-        for (int i = 0; i < num_points; ++i) {
-                N.push_back(static_cast<I>(std::round( std::pow(
-                        10,
-                        std::log10(N0) + i * (std::log10(N1) - std::log10(N0))
-                        / (num_points - 1)
-                ))));
-        }
+        std::ifstream fp0("param.json");
+        json j;
+        fp0 >> j;
+        const auto k    { j.at("k"    ).get<I>()              };
+        const auto gr   { j.at("gr"   ).get<I>()              };
+        const auto imax { j.at("imax" ).get<I>()              };
+        const auto N    { j.at("N"    ).get<std::vector<I>>() };
 
         json j_data;
         j_data["metadata"]["iterations"] = imax;
