@@ -1,13 +1,21 @@
 {
-        "k":     90,
-        "gr":    64,
-        "imax":  10,
-        "ndsize":  128,
+
+        "_doc": {
+
+                "imax":    "Number of iterations to run for each size",
+                "k":       "number of nearest neighbors to search",
+                "gr":      "grid resolution",
+                "ndsize":  "GPU work group size",
+                "N":       "List of different sizes for the benchmark"
+
+        },
+
+        "k":       90,
+        "gr":      64,
+        "imax":    10,
+        "ndsize":  512,
+
         "N": [
-                1024,
-                2048,
-                4096,
-                8192,
                 16384,
                 32768,
                 65536,
@@ -20,4 +28,5 @@
                 8388608,
                 16777216
         ]
+
 }
