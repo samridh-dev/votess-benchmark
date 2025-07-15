@@ -10,11 +10,11 @@ indir   = "data/"
 outdir  = "plot/"
 ext     = "png"
 
-# cpu_info = "(2x) Intel Xeon Platinum 8360Y CPUs 2.40GHz (36) @ "
-# gpu_info = "NVIDIA A100-40GB Tensor Core GPU"
-
 cpu_info = "13th Gen Intel i5-1335U (12) @ 4.600GHz"
 gpu_info = "Intel Raptor Lake-P [Iris Xe Graphics] "
+
+cpu_info = "(2x) Intel Xeon Platinum 8360Y CPUs 2.40GHz (36) @ "
+gpu_info = "NVIDIA A100-40GB Tensor Core GPU"
 
 algorithms = ['votess (CPU)', 'votess (GPU)', 'voro++', 'CGAL']
 
@@ -28,7 +28,7 @@ stub_map   = {
 colors = {
     algorithms[0] : '#BB5566',
     algorithms[1] : '#004488',
-    algorithms[2] : '#DDAA33',
+    algorithms[2] : '#aaaaaa',
     algorithms[3] : '#000000',
 }
 
@@ -108,23 +108,37 @@ plt.text(0.02, 0.91,
          fontsize=10, va='bottom', ha='left',
          bbox=dict(facecolor='white', alpha=0.5))
 plt.savefig(os.path.join(outdir, f"loglog.{ext}"), dpi=300)
-
 # --------------------------------------------------------------------------- #
-# Bar plot at powers of 10                                                    #
+# Bar plot (every 2 points)                                                   #
 # --------------------------------------------------------------------------- #
 
-mask = np.isclose(np.log10(N), np.round(np.log10(N)))
-N_pows = np.array(N)[mask]
-x = np.arange(len(N_pows))
-width = 0.8 / len(algorithms)
+idx = list(range(0, len(N), 1))
+
+x = np.arange(len(idx))
+
+total_width = 0.8
+bar_width = total_width / len(algorithms)
 
 plt.figure(figsize=(10,8))
 for i, algo in enumerate(algorithms):
-    vals = np.array(means[algo])[mask]
-    plt.bar(x[1:] + i*width, vals[1:] / N_pows[1:], width, label=algo, color=colors[algo])
+    # heights at those indices
+    heights = [means[algo][j] / N[j] for j in idx]
+    plt.bar(x + i*bar_width, heights,
+            width=bar_width,
+            label=algo,
+            color=colors[algo])
+
+plt.xticks(x + total_width/2 - bar_width/2,
+           [str(N[j]) for j in idx])
 plt.xlabel('Dataset Size [N]')
-plt.ylabel('Time/Size [s][N]$^{-1}$')
-plt.xticks(x + width*(len(algorithms)-1)/2, [int(n) for n in N_pows])
+plt.ylabel('Time [s]')
+plt.grid(True, ls='--', axis='y')
 plt.legend(title='Algorithm', loc='upper left', prop={'size':9})
-plt.grid(True, axis='y', ls='--')
+plt.yscale('log')
+plt.text(0.02, 0.91,
+         f"CPU: {cpu_info}\nGPU: {gpu_info}",
+         transform=plt.gca().transAxes,
+         fontsize=10, va='bottom', ha='left',
+         bbox=dict(facecolor='white', alpha=0.5))
+plt.tight_layout()
 plt.savefig(os.path.join(outdir, f"bar.{ext}"), dpi=300)
